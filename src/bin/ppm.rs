@@ -1,8 +1,20 @@
-use mandelbrot::{pallet::Pallet, utils::cast_color, Mandelbrot, OrthodoxMandelbrot};
+use clap::{AppSettings, Clap};
+
+use mandelbrot::{orthodox::OrthodoxMandelbrot, pallet::Pallet, utils::cast_color, Mandelbrot};
+
+#[derive(Debug, Clap)]
+#[clap(setting = AppSettings::ColoredHelp)]
+struct Opts {
+    #[clap(short, long, default_value = "10")]
+    pixel_pow: u8,
+    #[clap(short, long, default_value = "100")]
+    loop_max: u32,
+}
 
 fn main() {
-    let pallet = Pallet::new(-2.0, -2.0, 4.0, 4.0, 10, 10);
-    let loop_max = 100;
+    let opts: Opts = Opts::parse();
+    let pallet = Pallet::new(-2.0, -2.0, 4.0, 4.0, opts.pixel_pow, opts.pixel_pow);
+    let loop_max = opts.loop_max;
     println!("P3");
     println!("{} {}", pallet.pixel_width, pallet.pixel_height);
     println!("255");
